@@ -14,7 +14,7 @@ sceneRadius = 100.0 :: Double
 render :: Vector3 -> Vector3 -> Vector3 -> [Shape] -> [Lamp] -> [[Colour]]
 render pos dir up shapes lights = map (map raytrace) rays where
 --render the scene of shapes and lights
-	rays = genRays 1920 1080 dir up
+	rays = genRays 1080 1920 dir up
 	raytrace = trace shapes lights pos
 
 genRays :: Integer -> Integer -> Vector3 -> Vector3 -> [[Vector3]]
