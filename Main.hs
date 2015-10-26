@@ -5,6 +5,8 @@ import MyVector3
 import Colour
 import PPM6
 
+{- a simple example demonstrating some of the capabilities of this framework -}
+
 main = save_ppm "example.ppm" (render viewPos viewDir viewUp shapes lights)
 
 viewPos = Vec3 [-50, 20, 0]

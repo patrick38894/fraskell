@@ -1,5 +1,9 @@
 module MyVector3 where
 
+{- basic vector utility to be used throughout the raytracer.
+although there is nothing explicitly stopping construction of
+non-3-element-vectors, do not do it -}
+
 data Vector3 = Vec3 [Double]
 
 instance Num Vector3 where

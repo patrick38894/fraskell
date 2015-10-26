@@ -3,6 +3,12 @@ module Lights where
 import Colour
 import MyVector3
 
+{- this file defines surfaces and lighting functions
+surfaces contain color, diffuse exponent, and specular exponent
+in that order. the diffuse are specular functions are implementations
+of the standard lighting equations. the mix functions uses subtractive color mixing
+and is useful for the raytracing done in the file "Renderer.hs" -}
+
 data Lamp = Light Vector3 Colour Double
 data Surface = NotASurface | Surf Colour Double Double
 

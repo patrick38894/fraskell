@@ -7,6 +7,9 @@ import Colour
 import Mandelbrot
 import Data.Complex
 
+{- This file defines all the functions and constants used in the raymarching algorithm
+-}
+
 epsilon = 0.00001 :: Double
 infinity = 99999999 :: Double
 sceneRadius = 100.0 :: Double
@@ -14,7 +17,7 @@ sceneRadius = 100.0 :: Double
 render :: Vector3 -> Vector3 -> Vector3 -> [Shape] -> [Lamp] -> [[Colour]]
 render pos dir up shapes lights = map (map raytrace) rays where
 --render the scene of shapes and lights
-	rays = genRays 1080 1920 dir up
+	rays = genRays 1080 1920 dir up -- y,x dimensions and vectors to indicate up and right
 	raytrace = trace shapes lights pos
 
 genRays :: Integer -> Integer -> Vector3 -> Vector3 -> [[Vector3]]
@@ -25,12 +28,14 @@ genRays x y dir up = map (map distort) grid where
 		xoff = scale (f * fromIntegral m / fromIntegral x) right
 		yoff = scale (f * fromIntegral n / fromIntegral x) up
 	f = 0.125
-	right = Vec3 [0,-1,0]--dir `cross` up
+	right = dir `cross` up
 	
 
 trace :: [Shape] -> [Lamp] -> Vector3 -> Vector3 -> Colour
 trace shapes lights pos dir
 --trace the path of a ray as it bounces over objects, until it leaves the scene
+{- this is the raymarching algorithm. it estimates the distance to the nearest surface
+using the distance estimator functions. then if it is close enough (within epsilon units) it obtains the surface properties and mixes the incoming light with a bounced ray -}
 	| dist < epsilon = surfaceColor + 0.5 * (trace shapes lights shiftPos reflection)
 	| dist >= sceneRadius = (colorize . mandelbrot . inv . normToTex $ normalize pos)
 	| otherwise = trace shapes lights (pos + scale dist dir) dir where
@@ -42,6 +47,7 @@ trace shapes lights pos dir
 	
 
 --these functions are for mapping the atmosphere to the mandelbrot set
+--they are arbitrarily chosen based on how interesting they look
 inv :: Complex Double -> Complex Double
 inv = inversion ((-0.75) :+ 0.1) 0.005
 
@@ -77,7 +83,7 @@ illuminate :: Surface -> [Lamp] -> Vector3 -> Vector3 -> Colour
 illuminate NotASurface _ _ _ = black
 illuminate _ [] _ _ = black
 illuminate s (l:ls) dir normal = mix s (diff + spec + amb + illuminate s ls dir normal) where
---illuminate a surface with
+--illuminate a surface with the various lighting equations
 	spec = specular s l dir normal
 	diff = diffuse s l normal
 	amb = 0.5 * white

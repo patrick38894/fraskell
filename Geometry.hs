@@ -4,6 +4,13 @@ import MyVector3
 import Lights
 import Colour
 
+
+{- this file defines shapes, aka geometric primitives.
+they are defined using distance functions. these are a functions which
+estimate the distance from a point in space
+to the surface of the shape. a shape is a tuple of
+its distance function and its surface properties -}
+
 type Shape = ((Vector3->Double),Surface)
 
 sphere :: Double -> Vector3 -> (Vector3 -> Double)
